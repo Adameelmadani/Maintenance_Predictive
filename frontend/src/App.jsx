@@ -1,4 +1,5 @@
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom'
+import { useState } from 'react'
 import {
   LayoutDashboard, Activity, FlaskConical, Crosshair, Gauge, Zap
 } from 'lucide-react'
@@ -18,11 +19,24 @@ const navItems = [
 
 export default function App() {
   const location = useLocation()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <div className="app-layout">
+      {/* Mobile topbar */}
+      <div className="mobile-topbar">
+        <button
+          className="mobile-menu-btn"
+          aria-label="Toggle menu"
+          aria-expanded={sidebarOpen}
+          onClick={() => setSidebarOpen(o => !o)}
+        >
+          ☰
+        </button>
+        <div className="mobile-topbar-title">PREDMAINT AI</div>
+      </div>
       {/* ---- Sidebar ---- */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <div className="brand-icon"><Zap size={24} /></div>
           <h1>PREDMAINT AI</h1>
@@ -37,6 +51,7 @@ export default function App() {
               to={to}
               end={to === '/'}
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={() => setSidebarOpen(false)}
             >
               <Icon className="icon" size={18} />
               {label}
@@ -48,6 +63,8 @@ export default function App() {
           v1.0 - Predictive Maintenance<br />Prof. ZAKI Smail
         </div>
       </aside>
+      {/* overlay for mobile when sidebar open */}
+      <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
 
       {/* ---- Main ---- */}
       <main className="main-content">
