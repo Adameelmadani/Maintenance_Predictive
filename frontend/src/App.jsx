@@ -1,13 +1,12 @@
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, Activity, FlaskConical, Crosshair, ClipboardList, Gauge, Zap
+  LayoutDashboard, Activity, FlaskConical, Crosshair, Gauge, Zap
 } from 'lucide-react'
 import Dashboard from './pages/Dashboard'
 import KPIs from './pages/KPIs'
 import Monitoring from './pages/Monitoring'
 import IALab from './pages/IALab'
 import Prognostic from './pages/Prognostic'
-import Logs from './pages/Logs'
 
 const navItems = [
   { to: '/',            icon: LayoutDashboard, label: 'Dashboard' },
@@ -15,7 +14,6 @@ const navItems = [
   { to: '/monitoring',  icon: Activity,        label: 'Monitoring' },
   { to: '/ia-lab',      icon: FlaskConical,    label: 'IA Lab' },
   { to: '/prognostic',  icon: Crosshair,       label: 'Prognostic' },
-  { to: '/logs',        icon: ClipboardList,    label: 'Logs' },
 ]
 
 export default function App() {
@@ -59,7 +57,6 @@ export default function App() {
           <Route path="/monitoring" element={<Monitoring />} />
           <Route path="/ia-lab"     element={<IALab />} />
           <Route path="/prognostic" element={<Prognostic />} />
-          <Route path="/logs"       element={<Logs />} />
         </Routes>
       </main>
     </div>
