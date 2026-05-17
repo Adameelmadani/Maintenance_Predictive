@@ -4,14 +4,11 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, RadialBarChart, RadialBar, Legend
 } from 'recharts'
+import { Heart, Clock, AlertTriangle, Wrench, TrendingUp, TrendingDown, Database, TestTube, Zap } from 'lucide-react'
 import { api } from '../api'
 
-/* ---------- helpers ---------- */
 const statusColor = (s) =>
-  s === 'healthy' ? '#00ff88' : s === 'warning' ? '#ff6b35' : '#ff3366'
-
-const statusEmoji = (s) =>
-  s === 'healthy' ? '🟢' : s === 'warning' ? '🟡' : '🔴'
+  s === 'healthy' ? '#16a34a' : s === 'warning' ? '#ea580c' : '#dc2626'
 
 /* ---------- Sub-components ---------- */
 function GaugeRing({ value, label, color }) {
@@ -49,9 +46,9 @@ export default function Dashboard() {
   if (!data) return <div className="page-body"><p style={{ color: 'var(--red)' }}>Failed to load data. Ensure the API server is running on port 5000.</p></div>
 
   const pieCounts = [
-    { name: 'Healthy', value: data.healthy_count, color: '#00ff88' },
-    { name: 'Warning', value: data.warning_count, color: '#ff6b35' },
-    { name: 'Critical', value: data.critical_count, color: '#ff3366' },
+    { name: 'Healthy', value: data.healthy_count, color: '#16a34a' },
+    { name: 'Warning', value: data.warning_count, color: '#ea580c' },
+    { name: 'Critical', value: data.critical_count, color: '#dc2626' },
   ]
 
   const distData = data.rul_distribution.bins.map((b, i) => ({
@@ -61,8 +58,8 @@ export default function Dashboard() {
   return (
     <>
       <div className="page-header">
-        <h1>🏠 MISSION CONTROL</h1>
-        <p>Fleet Status Dashboard — Real-Time Engine Monitoring</p>
+        <h1>MISSION CONTROL</h1>
+        <p>Fleet Status Dashboard - Real-Time Engine Monitoring</p>
       </div>
 
       <div className="page-body">
@@ -71,29 +68,29 @@ export default function Dashboard() {
           <div className="kpi-card accent-cyan fade-in stagger-1">
             <div className="kpi-header">
               <span className="kpi-label">Fleet Health</span>
-              <span className="kpi-icon cyan">💚</span>
+              <div className="kpi-icon cyan"><Heart size={20} /></div>
             </div>
             <div className="kpi-value">{data.fleet_health}%</div>
             <div className={`kpi-delta ${data.fleet_health > 50 ? 'positive' : 'negative'}`}>
-              {data.fleet_health > 50 ? '▲' : '▼'} {Math.abs(data.fleet_health - 50).toFixed(1)}% vs baseline
+              {data.fleet_health > 50 ? <TrendingUp size={14} style={{display:'inline', marginRight:4}} /> : <TrendingDown size={14} style={{display:'inline', marginRight:4}} />} {Math.abs(data.fleet_health - 50).toFixed(1)}% vs baseline
             </div>
           </div>
 
           <div className="kpi-card accent-orange fade-in stagger-2">
             <div className="kpi-header">
               <span className="kpi-label">Min RUL</span>
-              <span className="kpi-icon orange">⏱️</span>
+              <div className="kpi-icon orange"><Clock size={20} /></div>
             </div>
             <div className="kpi-value">{data.min_rul}</div>
             <div className={`kpi-delta ${data.min_rul > 30 ? 'positive' : 'negative'}`}>
-              {data.min_rul <= 30 ? '🚨 CRITICAL' : data.min_rul <= 50 ? '⚠️ WARNING' : '✅ OK'}
+              {data.min_rul <= 30 ? 'Critical' : data.min_rul <= 50 ? 'Warning' : 'OK'}
             </div>
           </div>
 
           <div className="kpi-card accent-red fade-in stagger-3">
             <div className="kpi-header">
               <span className="kpi-label">Engines at Risk</span>
-              <span className="kpi-icon red">🔴</span>
+              <div className="kpi-icon red"><AlertTriangle size={20} /></div>
             </div>
             <div className="kpi-value">{data.critical_count}</div>
             <div className={`kpi-delta ${data.critical_count === 0 ? 'positive' : 'negative'}`}>
@@ -104,7 +101,7 @@ export default function Dashboard() {
           <div className="kpi-card accent-purple fade-in stagger-4">
             <div className="kpi-header">
               <span className="kpi-label">Total Engines</span>
-              <span className="kpi-icon purple">🔧</span>
+              <div className="kpi-icon purple"><Wrench size={20} /></div>
             </div>
             <div className="kpi-value">{data.total_engines}</div>
             <div className="kpi-delta neutral">
@@ -120,12 +117,12 @@ export default function Dashboard() {
             <GaugeRing
               value={data.fleet_health}
               label="Fleet Health"
-              color={data.fleet_health > 60 ? '#00ff88' : data.fleet_health > 30 ? '#ff6b35' : '#ff3366'}
+              color={data.fleet_health > 60 ? '#16a34a' : data.fleet_health > 30 ? '#ea580c' : '#dc2626'}
             />
             <div style={{ textAlign: 'center', marginTop: 16 }}>
-              <div className="badge badge-healthy" style={{ marginRight: 8 }}>🟢 Healthy &gt;50</div>
-              <div className="badge badge-warning" style={{ marginRight: 8 }}>🟡 Warning 30-50</div>
-              <div className="badge badge-critical">🔴 Critical ≤30</div>
+              <div className="badge badge-healthy" style={{ marginRight: 8 }}>Healthy &gt;50</div>
+              <div className="badge badge-warning" style={{ marginRight: 8 }}>Warning 30-50</div>
+              <div className="badge badge-critical">Critical ≤30</div>
             </div>
           </div>
 
@@ -137,8 +134,8 @@ export default function Dashboard() {
                   dataKey="value" paddingAngle={4} stroke="none">
                   {pieCounts.map((e, i) => <Cell key={i} fill={e.color} />)}
                 </Pie>
-                <Tooltip contentStyle={{ background: '#182240', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 8, color: '#e8f4fd' }} />
-                <Legend wrapperStyle={{ fontSize: '0.8rem', color: '#7e8fa6' }} />
+                <Tooltip contentStyle={{ background: '#f0f4ff', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 8, color: '#1f2937' }} />
+                <Legend wrapperStyle={{ fontSize: '0.8rem', color: '#6b7280' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -150,12 +147,12 @@ export default function Dashboard() {
             <div className="chart-title">RUL Distribution Across Fleet</div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={distData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <XAxis dataKey="range" tick={{ fill: '#7e8fa6', fontSize: 12 }} />
-                <YAxis tick={{ fill: '#7e8fa6', fontSize: 12 }} />
-                <Tooltip contentStyle={{ background: '#182240', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 8, color: '#e8f4fd' }} />
+                <XAxis dataKey="range" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
+                <Tooltip contentStyle={{ background: '#f0f4ff', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 8, color: '#1f2937' }} />
                 <Bar dataKey="count" radius={[6, 6, 0, 0]}>
                   {distData.map((_, i) => (
-                    <Cell key={i} fill={i < 2 ? '#ff3366' : i < 3 ? '#ff6b35' : '#00d4ff'} />
+                    <Cell key={i} fill={i < 2 ? '#dc2626' : i < 3 ? '#ea580c' : '#2563eb'} />
                   ))}
                 </Bar>
               </BarChart>
@@ -165,7 +162,7 @@ export default function Dashboard() {
 
         {/* Engine Fleet Grid */}
         <div className="section fade-in stagger-5">
-          <div className="section-title">🚨 Engine Fleet Status (Top 20)</div>
+          <div className="section-title">Engine Fleet Status (Top 20)</div>
           <div className="engine-grid">
             {data.engines.slice(0, 20).map(eng => (
               <div
@@ -174,7 +171,7 @@ export default function Dashboard() {
                 onClick={() => navigate(`/prognostic?engine=${eng.engine_id}`)}
               >
                 <div className="engine-id">
-                  {statusEmoji(eng.status)} EN{String(eng.engine_id).padStart(3, '0')}
+                  EN{String(eng.engine_id).padStart(3, '0')}
                 </div>
                 <div className="engine-rul">{eng.rul.toFixed(0)}</div>
                 <div className="engine-label">RUL cycles</div>
@@ -190,17 +187,17 @@ export default function Dashboard() {
         <div className="section fade-in stagger-6">
           <div className="grid-3">
             <div className="card" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2rem', marginBottom: 8 }}>📊</div>
+              <div style={{ marginBottom: 8, display:'flex', justifyContent:'center' }}><Database size={32} color="var(--cyan)" /></div>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--cyan)' }}>{data.train_samples.toLocaleString()}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Training Samples</div>
             </div>
             <div className="card" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2rem', marginBottom: 8 }}>🧪</div>
+              <div style={{ marginBottom: 8, display:'flex', justifyContent:'center' }}><TestTube size={32} color="var(--cyan)" /></div>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--cyan)' }}>{data.test_samples.toLocaleString()}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Test Samples</div>
             </div>
             <div className="card" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2rem', marginBottom: 8 }}>🔬</div>
+              <div style={{ marginBottom: 8, display:'flex', justifyContent:'center' }}><Zap size={32} color="var(--cyan)" /></div>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', color: 'var(--cyan)' }}>{data.n_features}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Features</div>
             </div>

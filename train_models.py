@@ -19,11 +19,11 @@ import pandas as pd
 
 def main():
     print("\n" + "="*80)
-    print(" " * 15 + "🚀 PREDICTIVE MAINTENANCE — MODEL TRAINING PIPELINE")
+    print(" " * 15 + "PREDICTIVE MAINTENANCE - MODEL TRAINING PIPELINE")
     print("="*80)
     
     # ========== STEP 1: Load Data ==========
-    print("\n📊 STEP 1: Data Loading & Preprocessing")
+    print("\nSTEP 1: Data Loading & Preprocessing")
     print("-" * 80)
     
     loader = DataLoader(data_dir='data', processed_dir='data/processed')
@@ -40,20 +40,20 @@ def main():
     y_rul_test = data['y_rul_test']
     
     # ========== STEP 2: Train RUL Models ==========
-    print("\n\n📈 STEP 2: Training RUL Prediction Models (5 models)")
+    print("\n\nSTEP 2: Training RUL Prediction Models (5 models)")
     print("-" * 80)
     
     rul_suite = RULModelSuite(model_dir='models')
     rul_suite.train_all_models(X_train, y_rul_train, X_test, y_rul_test)
     
-    print("\n📊 RUL Model Benchmarks:")
+    print("\nRUL Model Benchmarks:")
     print("-" * 80)
     rul_benchmarks = rul_suite.get_benchmark_table()
     df_rul = pd.DataFrame(rul_benchmarks).T
     print(df_rul.to_string())
     
     # ========== STEP 3: Train Classification Models ==========
-    print("\n\n🎯 STEP 3: Training Diagnostic Classification Models (2 models)")
+    print("\n\nSTEP 3: Training Diagnostic Classification Models (2 models)")
     print("-" * 80)
     
     cls_suite = DiagnosticModelSuite(model_dir='models')
@@ -61,14 +61,14 @@ def main():
     y_cls_test = (y_rul_test <= 30).astype(int)
     cls_suite.train_all_models(X_train, y_cls_train, X_test, y_cls_test)
     
-    print("\n📊 Diagnostic Model Benchmarks:")
+    print("\nDiagnostic Model Benchmarks:")
     print("-" * 80)
     cls_benchmarks = cls_suite.get_benchmark_table()
     df_cls = pd.DataFrame(cls_benchmarks).T
     print(df_cls.to_string())
     
     # ========== STEP 4: Save Comprehensive Benchmark Report ==========
-    print("\n\n✨ STEP 4: Generating Comprehensive Benchmark Report")
+    print("\n\nSTEP 4: Generating Comprehensive Benchmark Report")
     print("-" * 80)
     
     # Create full report
@@ -98,10 +98,10 @@ def main():
     
     # ========== STEP 5: Summary ==========
     print("\n\n" + "="*80)
-    print(" " * 20 + "✅ ALL MODELS TRAINED AND SAVED SUCCESSFULLY!")
+    print(" " * 20 + "ALL MODELS TRAINED AND SAVED SUCCESSFULLY!")
     print("="*80)
     
-    print("\n📁 Saved Artifacts:")
+    print("\nSaved Artifacts:")
     print("  ✓ RUL Models:")
     print("    - models/rul_huber.pkl")
     print("    - models/rul_decisiontree.pkl")

@@ -3,6 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
   BarChart, Bar, Cell, AreaChart, Area, ReferenceLine
 } from 'recharts'
+import { TrendingUp, BarChart3, Gauge, Activity } from 'lucide-react'
 import { api } from '../api'
 
 export default function Monitoring() {
@@ -34,11 +35,11 @@ export default function Monitoring() {
 
   const fftData = data ? data.fft.frequencies.map((f, i) => ({ freq: +f.toFixed(4), amp: data.fft.amplitudes[i] })) : []
 
-  const tt = { background: '#182240', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 8, color: '#e8f4fd' }
+  const tt = { background: '#f0f4ff', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 8, color: '#1f2937' }
 
   return (
     <>
-      <div className="page-header"><h1>📡 SIGNAL MONITORING</h1><p>Sensor Visualization — FFT — Anomaly Detection</p></div>
+      <div className="page-header"><h1>SIGNAL MONITORING</h1><p>Sensor Visualization - FFT - Anomaly Detection</p></div>
       <div className="page-body">
         <div style={{ display:'flex', gap:16, marginBottom:24, flexWrap:'wrap' }} className="fade-in">
           <div>
@@ -64,30 +65,33 @@ export default function Monitoring() {
         {data && <>
           <div className="kpi-grid fade-in stagger-1">
             {[
-              { label:'RMS', val:data.stats.rms, accent:'cyan', icon:'📈' },
-              { label:'Kurtosis', val:data.stats.kurtosis, accent:'orange', icon:'📊' },
-              { label:'Peak-to-Peak', val:data.stats.peak_to_peak, accent:'purple', icon:'📏' },
-              { label:'Skewness', val:data.stats.skewness, accent:'green', icon:'📐' },
-            ].map(k=>(
-              <div key={k.label} className={`kpi-card accent-${k.accent}`}>
-                <div className="kpi-header"><span className="kpi-label">{k.label}</span><span className={`kpi-icon ${k.accent}`}>{k.icon}</span></div>
-                <div className="kpi-value" style={{ fontSize:'1.4rem' }}>{k.val}</div>
-              </div>
-            ))}
+              { label:'RMS', val:data.stats.rms, accent:'cyan', icon: TrendingUp },
+              { label:'Kurtosis', val:data.stats.kurtosis, accent:'orange', icon: BarChart3 },
+              { label:'Peak-to-Peak', val:data.stats.peak_to_peak, accent:'purple', icon: Activity },
+              { label:'Skewness', val:data.stats.skewness, accent:'green', icon: Gauge },
+            ].map(k=>{
+              const IconComp = k.icon;
+              return (
+                <div key={k.label} className={`kpi-card accent-${k.accent}`}>
+                  <div className="kpi-header"><span className="kpi-label">{k.label}</span><div className={`kpi-icon ${k.accent}`}><IconComp size={20} /></div></div>
+                  <div className="kpi-value" style={{ fontSize:'1.4rem' }}>{k.val}</div>
+                </div>
+              )
+            })}
           </div>
 
           <div className="section fade-in stagger-2">
             <div className="chart-container">
-              <div className="chart-title">Raw Signal — {sensor} (Engine {engineId})</div>
+              <div className="chart-title">Raw Signal - {sensor} (Engine {engineId})</div>
               <ResponsiveContainer width="100%" height={340}>
                 <AreaChart data={signalData}>
-                  <XAxis dataKey="cycle" tick={{ fill:'#7e8fa6', fontSize:11 }}/>
-                  <YAxis tick={{ fill:'#7e8fa6', fontSize:11 }}/>
+                  <XAxis dataKey="cycle" tick={{ fill:'#6b7280', fontSize:11 }}/>
+                  <YAxis tick={{ fill:'#6b7280', fontSize:11 }}/>
                   <Tooltip contentStyle={tt}/>
-                  <Area type="monotone" dataKey="upper" stroke="none" fill="rgba(123,47,190,0.1)"/>
-                  <Line type="monotone" dataKey="raw" stroke="#00d4ff" strokeWidth={1.5} dot={false} opacity={0.7}/>
-                  <Line type="monotone" dataKey="mean" stroke="#00ff88" strokeWidth={2} dot={false} strokeDasharray="6 3"/>
-                  {data.rul_threshold_cycle && <ReferenceLine x={data.rul_threshold_cycle} stroke="#ff3366" strokeDasharray="4 4"/>}
+                  <Area type="monotone" dataKey="upper" stroke="none" fill="rgba(124,58,237,0.1)"/>
+                  <Line type="monotone" dataKey="raw" stroke="#2563eb" strokeWidth={1.5} dot={false} opacity={0.7}/>
+                  <Line type="monotone" dataKey="mean" stroke="#16a34a" strokeWidth={2} dot={false} strokeDasharray="6 3"/>
+                  {data.rul_threshold_cycle && <ReferenceLine x={data.rul_threshold_cycle} stroke="#dc2626" strokeDasharray="4 4"/>}
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -95,14 +99,14 @@ export default function Monitoring() {
 
           <div className="section fade-in stagger-3">
             <div className="chart-container">
-              <div className="chart-title">FFT Spectrum — {sensor}</div>
+              <div className="chart-title">FFT Spectrum - {sensor}</div>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={fftData}>
-                  <XAxis dataKey="freq" tick={{ fill:'#7e8fa6', fontSize:10 }}/>
-                  <YAxis tick={{ fill:'#7e8fa6', fontSize:10 }}/>
+                  <XAxis dataKey="freq" tick={{ fill:'#6b7280', fontSize:10 }}/>
+                  <YAxis tick={{ fill:'#6b7280', fontSize:10 }}/>
                   <Tooltip contentStyle={tt}/>
                   <Bar dataKey="amp" radius={[4,4,0,0]}>
-                    {fftData.map((_,i)=><Cell key={i} fill={`hsl(${180+i*4},80%,55%)`}/>)}
+                    {fftData.map((_,i)=><Cell key={i} fill={`hsl(${220+i*2},80%,50%)`}/>)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>

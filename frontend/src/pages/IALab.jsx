@@ -4,6 +4,7 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ScatterChart, Scatter, ZAxis
 } from 'recharts'
+import { Award } from 'lucide-react'
 import { api } from '../api'
 
 export default function IALab() {
@@ -21,7 +22,7 @@ export default function IALab() {
   const cls = bench.Classification_Models?.benchmarks || {}
   const rulDetailed = bench.RUL_Models?.detailed_results || {}
   const clsMatrices = bench.Classification_Models?.confusion_matrices || {}
-  const tt = { background:'#182240', border:'1px solid rgba(0,212,255,0.2)', borderRadius:8, color:'#e8f4fd' }
+  const tt = { background:'#f0f4ff', border:'1px solid rgba(37,99,235,0.2)', borderRadius:8, color:'#1f2937' }
 
   const rulEntries = Object.entries(rul).sort((a,b) => a[1].MAE - b[1].MAE)
   const barData = rulEntries.map(([n,m]) => ({ name:n, MAE:m.MAE, RMSE:m.RMSE }))
@@ -32,7 +33,8 @@ export default function IALab() {
     { metric:'R² Score', ...Object.fromEntries(rulEntries.map(([n,m])=>[n, Math.max(0,m.R2*100+100)])) },
     { metric:'Speed', ...Object.fromEntries(rulEntries.map(([n,m])=>[n, 100/(m.TrainTime_s+0.1)])) },
   ]
-  const colors = ['#00d4ff','#00ff88','#ff6b35','#ff3366','#7b2fbe']
+  const colors = ['#2563eb','#16a34a','#ea580c','#dc2626','#7c3aed']
+  const medals = ['Gold', 'Silver', 'Bronze']
 
   const currentModel = selModel || (rulEntries[0]?.[0] || '')
   const modelDetail = rulDetailed[currentModel]
@@ -42,11 +44,11 @@ export default function IALab() {
 
   return (
     <>
-      <div className="page-header"><h1>🧪 IA LAB — BENCHMARKING</h1><p>Model Performance Comparison & Analysis</p></div>
+      <div className="page-header"><h1>IA LAB - BENCHMARKING</h1><p>Model Performance Comparison & Analysis</p></div>
       <div className="page-body">
         <div className="tabs fade-in">
-          <button className={`tab ${tab==='regression'?'active':''}`} onClick={()=>setTab('regression')}>📈 Regression (RUL)</button>
-          <button className={`tab ${tab==='classification'?'active':''}`} onClick={()=>setTab('classification')}>🎯 Classification</button>
+          <button className={`tab ${tab==='regression'?'active':''}`} onClick={()=>setTab('regression')}>Regression (RUL)</button>
+          <button className={`tab ${tab==='classification'?'active':''}`} onClick={()=>setTab('classification')}>Classification</button>
         </div>
 
         {tab === 'regression' && <>
@@ -54,7 +56,7 @@ export default function IALab() {
           <div className="kpi-grid fade-in stagger-1">
             {rulEntries.slice(0,3).map(([n,m],i) => (
               <div key={n} className={`kpi-card accent-${['cyan','green','orange'][i]}`}>
-                <div className="kpi-header"><span className="kpi-label">#{i+1} — {n}</span><span className={`kpi-icon ${['cyan','green','orange'][i]}`}>{['🥇','🥈','🥉'][i]}</span></div>
+                <div className="kpi-header"><span className="kpi-label">#{i+1} - {n}</span><div className={`kpi-icon ${['cyan','green','orange'][i]}`}><Award size={20} /></div></div>
                 <div className="kpi-value" style={{ fontSize:'1.4rem' }}>{m.MAE.toFixed(2)}</div>
                 <div className="kpi-delta neutral">MAE · R²={m.R2.toFixed(4)}</div>
               </div>
@@ -89,11 +91,11 @@ export default function IALab() {
               <div className="chart-title">MAE / RMSE Comparison</div>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={barData} layout="vertical">
-                  <XAxis type="number" tick={{ fill:'#7e8fa6', fontSize:11 }}/>
-                  <YAxis type="category" dataKey="name" tick={{ fill:'#7e8fa6', fontSize:11 }} width={100}/>
+                  <XAxis type="number" tick={{ fill:'#6b7280', fontSize:11 }}/>
+                  <YAxis type="category" dataKey="name" tick={{ fill:'#6b7280', fontSize:11 }} width={100}/>
                   <Tooltip contentStyle={tt}/>
-                  <Bar dataKey="MAE" fill="#00d4ff" radius={[0,4,4,0]} barSize={12} name="MAE"/>
-                  <Bar dataKey="RMSE" fill="#ff6b35" radius={[0,4,4,0]} barSize={12} name="RMSE"/>
+                  <Bar dataKey="MAE" fill="#2563eb" radius={[0,4,4,0]} barSize={12} name="MAE"/>
+                  <Bar dataKey="RMSE" fill="#ea580c" radius={[0,4,4,0]} barSize={12} name="RMSE"/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -101,8 +103,8 @@ export default function IALab() {
               <div className="chart-title">Performance Radar</div>
               <ResponsiveContainer width="100%" height={300}>
                 <RadarChart data={radarData}>
-                  <PolarGrid stroke="rgba(255,255,255,0.08)"/>
-                  <PolarAngleAxis dataKey="metric" tick={{ fill:'#7e8fa6', fontSize:11 }}/>
+                  <PolarGrid stroke="rgba(107,112,128,0.08)"/>
+                  <PolarAngleAxis dataKey="metric" tick={{ fill:'#6b7280', fontSize:11 }}/>
                   <PolarRadiusAxis tick={false} domain={[0,100]}/>
                   {rulEntries.map(([n],i)=>(
                     <Radar key={n} name={n} dataKey={n} stroke={colors[i]} fill={colors[i]} fillOpacity={0.15}/>
@@ -125,11 +127,11 @@ export default function IALab() {
               {scatterData.length > 0 && (
                 <ResponsiveContainer width="100%" height={350}>
                   <ScatterChart>
-                    <XAxis type="number" dataKey="actual" name="Actual" tick={{ fill:'#7e8fa6', fontSize:11 }} label={{ value:'Actual RUL', fill:'#7e8fa6', position:'bottom' }}/>
-                    <YAxis type="number" dataKey="predicted" name="Predicted" tick={{ fill:'#7e8fa6', fontSize:11 }} label={{ value:'Predicted RUL', fill:'#7e8fa6', angle:-90, position:'left' }}/>
+                    <XAxis type="number" dataKey="actual" name="Actual" tick={{ fill:'#6b7280', fontSize:11 }} label={{ value:'Actual RUL', fill:'#6b7280', position:'bottom' }}/>
+                    <YAxis type="number" dataKey="predicted" name="Predicted" tick={{ fill:'#6b7280', fontSize:11 }} label={{ value:'Predicted RUL', fill:'#6b7280', angle:-90, position:'left' }}/>
                     <ZAxis type="number" dataKey="error" range={[20,200]}/>
                     <Tooltip contentStyle={tt} formatter={(v,n)=>[v.toFixed(1),n]}/>
-                    <Scatter data={scatterData} fill="#00d4ff" opacity={0.5}/>
+                    <Scatter data={scatterData} fill="#2563eb" opacity={0.5}/>
                   </ScatterChart>
                 </ResponsiveContainer>
               )}
@@ -162,7 +164,7 @@ export default function IALab() {
           <div className="grid-2 section fade-in stagger-2">
             {Object.entries(clsMatrices).map(([n,cm])=>(
               <div key={n} className="chart-container">
-                <div className="chart-title">{n} — Confusion Matrix</div>
+                <div className="chart-title">{n} - Confusion Matrix</div>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, maxWidth:280, margin:'0 auto' }}>
                   {[
                     { label:'TN', val:cm.TN, color:'var(--green)' },

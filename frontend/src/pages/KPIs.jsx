@@ -4,6 +4,7 @@ import {
   PieChart, Pie, Cell, AreaChart, Area, RadialBarChart, RadialBar, Legend,
   LineChart, Line
 } from 'recharts'
+import { Activity, Clock, RotateCcw, Factory, Target, AlertTriangle, Radio } from 'lucide-react'
 import { api } from '../api'
 
 function MiniGauge({ value, max, color, label }) {
@@ -12,7 +13,7 @@ function MiniGauge({ value, max, color, label }) {
     <div style={{ textAlign: 'center' }}>
       <div style={{ position: 'relative', width: 120, height: 120, margin: '0 auto' }}>
         <svg width="120" height="120" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(107,112,128,0.12)" strokeWidth="8" />
           <circle cx="60" cy="60" r="50" fill="none" stroke={color} strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={2 * Math.PI * 50}
@@ -41,9 +42,9 @@ export default function KPIs() {
   if (!data) return <div className="page-body"><p style={{ color: 'var(--red)' }}>Failed to load KPIs.</p></div>
 
   const statusPie = [
-    { name: 'Healthy', value: data.status_distribution.healthy, color: '#00ff88' },
-    { name: 'Warning', value: data.status_distribution.warning, color: '#ff6b35' },
-    { name: 'Critical', value: data.status_distribution.critical, color: '#ff3366' },
+    { name: 'Healthy', value: data.status_distribution.healthy, color: '#16a34a' },
+    { name: 'Warning', value: data.status_distribution.warning, color: '#ea580c' },
+    { name: 'Critical', value: data.status_distribution.critical, color: '#dc2626' },
   ]
 
   // Simulated trend data for visual richness
@@ -57,8 +58,8 @@ export default function KPIs() {
   return (
     <>
       <div className="page-header">
-        <h1>📊 KPI CENTER</h1>
-        <p>Key Performance Indicators — Operational Intelligence & Analytics</p>
+        <h1>KPI CENTER</h1>
+        <p>Key Performance Indicators - Operational Intelligence & Analytics</p>
       </div>
 
       <div className="page-body">
@@ -67,18 +68,18 @@ export default function KPIs() {
           <div className="kpi-card accent-green fade-in stagger-1">
             <div className="kpi-header">
               <span className="kpi-label">Fleet Availability</span>
-              <span className="kpi-icon green">🟢</span>
+              <div className="kpi-icon green"><Activity size={20} /></div>
             </div>
             <div className="kpi-value">{data.fleet_availability}%</div>
             <div className={`kpi-delta ${data.fleet_availability > 90 ? 'positive' : 'negative'}`}>
-              {data.fleet_availability > 90 ? '▲ Excellent' : '▼ Below target'}
+              {data.fleet_availability > 90 ? '↑ Excellent' : '↓ Below target'}
             </div>
           </div>
 
           <div className="kpi-card accent-cyan fade-in stagger-2">
             <div className="kpi-header">
               <span className="kpi-label">Mean RUL</span>
-              <span className="kpi-icon cyan">⏱️</span>
+              <div className="kpi-icon cyan"><Clock size={20} /></div>
             </div>
             <div className="kpi-value">{data.avg_rul}</div>
             <div className="kpi-delta neutral">σ = {data.std_rul} cycles</div>
@@ -87,7 +88,7 @@ export default function KPIs() {
           <div className="kpi-card accent-purple fade-in stagger-3">
             <div className="kpi-header">
               <span className="kpi-label">MTBF Estimate</span>
-              <span className="kpi-icon purple">🔄</span>
+              <div className="kpi-icon purple"><RotateCcw size={20} /></div>
             </div>
             <div className="kpi-value">{data.mtbf_estimate}</div>
             <div className="kpi-delta neutral">cycles between failures</div>
@@ -96,11 +97,11 @@ export default function KPIs() {
           <div className="kpi-card accent-yellow fade-in stagger-4">
             <div className="kpi-header">
               <span className="kpi-label">OEE Score</span>
-              <span className="kpi-icon yellow">🏭</span>
+              <div className="kpi-icon yellow"><Factory size={20} /></div>
             </div>
             <div className="kpi-value">{data.oee}%</div>
             <div className={`kpi-delta ${data.oee > 70 ? 'positive' : 'negative'}`}>
-              {data.oee > 70 ? '▲ Above target' : '▼ Needs improvement'}
+              {data.oee > 70 ? '↑ Above target' : '↓ Needs improvement'}
             </div>
           </div>
         </div>
@@ -110,7 +111,7 @@ export default function KPIs() {
           <div className="kpi-card accent-red">
             <div className="kpi-header">
               <span className="kpi-label">Maintenance Due</span>
-              <span className="kpi-icon red">🔧</span>
+              <div className="kpi-icon red"><AlertTriangle size={20} /></div>
             </div>
             <div className="kpi-value">{data.maintenance_due}</div>
             <div className={`kpi-delta ${data.maintenance_due === 0 ? 'positive' : 'negative'}`}>
@@ -121,7 +122,7 @@ export default function KPIs() {
           <div className="kpi-card accent-orange">
             <div className="kpi-header">
               <span className="kpi-label">Engines at Risk</span>
-              <span className="kpi-icon orange">⚠️</span>
+              <div className="kpi-icon orange"><AlertTriangle size={20} /></div>
             </div>
             <div className="kpi-value">{data.engines_at_risk}</div>
             <div className="kpi-delta neutral">of {data.total_engines} total</div>
@@ -130,7 +131,7 @@ export default function KPIs() {
           <div className="kpi-card accent-cyan">
             <div className="kpi-header">
               <span className="kpi-label">Prediction Accuracy</span>
-              <span className="kpi-icon cyan">🎯</span>
+              <div className="kpi-icon cyan"><Target size={20} /></div>
             </div>
             <div className="kpi-value">{data.prediction_accuracy}%</div>
             <div className="kpi-delta positive">Best: {data.best_model.name}</div>
@@ -139,7 +140,7 @@ export default function KPIs() {
           <div className="kpi-card accent-green">
             <div className="kpi-header">
               <span className="kpi-label">Data Coverage</span>
-              <span className="kpi-icon green">📡</span>
+              <div className="kpi-icon green"><Radio size={20} /></div>
             </div>
             <div className="kpi-value">{data.sensor_count}</div>
             <div className="kpi-delta neutral">{data.data_points.toLocaleString()} data points</div>
@@ -148,16 +149,16 @@ export default function KPIs() {
 
         {/* Gauges Row */}
         <div className="section fade-in stagger-3">
-          <div className="section-title">🎯 Performance Gauges</div>
+          <div className="section-title">Performance Gauges</div>
           <div className="grid-3">
             <div className="chart-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 30 }}>
-              <MiniGauge value={data.fleet_availability} max={100} color="#00ff88" label="Availability %" />
+              <MiniGauge value={data.fleet_availability} max={100} color="#16a34a" label="Availability %" />
             </div>
             <div className="chart-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 30 }}>
-              <MiniGauge value={data.oee} max={100} color="#00d4ff" label="OEE Score" />
+              <MiniGauge value={data.oee} max={100} color="#2563eb" label="OEE Score" />
             </div>
             <div className="chart-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 30 }}>
-              <MiniGauge value={data.prediction_accuracy} max={100} color="#7b2fbe" label="Model Accuracy %" />
+              <MiniGauge value={data.prediction_accuracy} max={100} color="#7c3aed" label="Model Accuracy %" />
             </div>
           </div>
         </div>
@@ -172,7 +173,7 @@ export default function KPIs() {
                   dataKey="value" paddingAngle={4} stroke="none">
                   {statusPie.map((e, i) => <Cell key={i} fill={e.color} />)}
                 </Pie>
-                <Tooltip contentStyle={{ background: '#182240', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 8, color: '#e8f4fd' }} />
+                <Tooltip contentStyle={{ background: '#f0f4ff', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 8, color: '#1f2937' }} />
                 <Legend wrapperStyle={{ fontSize: '0.8rem' }} />
               </PieChart>
             </ResponsiveContainer>
@@ -184,19 +185,19 @@ export default function KPIs() {
               <AreaChart data={trendData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <defs>
                   <linearGradient id="gradAvail" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00ff88" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#00ff88" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#16a34a" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#16a34a" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gradOEE" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00d4ff" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#00d4ff" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="month" tick={{ fill: '#7e8fa6', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#7e8fa6', fontSize: 11 }} domain={[50, 100]} />
-                <Tooltip contentStyle={{ background: '#182240', border: '1px solid rgba(0,212,255,0.2)', borderRadius: 8, color: '#e8f4fd' }} />
-                <Area type="monotone" dataKey="availability" stroke="#00ff88" fill="url(#gradAvail)" strokeWidth={2} name="Availability" />
-                <Area type="monotone" dataKey="oee" stroke="#00d4ff" fill="url(#gradOEE)" strokeWidth={2} name="OEE" />
+                <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 11 }} />
+                <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} domain={[50, 100]} />
+                <Tooltip contentStyle={{ background: '#f0f4ff', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 8, color: '#1f2937' }} />
+                <Area type="monotone" dataKey="availability" stroke="#16a34a" fill="url(#gradAvail)" strokeWidth={2} name="Availability" />
+                <Area type="monotone" dataKey="oee" stroke="#2563eb" fill="url(#gradOEE)" strokeWidth={2} name="OEE" />
                 <Legend wrapperStyle={{ fontSize: '0.78rem' }} />
               </AreaChart>
             </ResponsiveContainer>

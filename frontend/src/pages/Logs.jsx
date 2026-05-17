@@ -4,6 +4,7 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend,
   BarChart, Bar, XAxis, YAxis
 } from 'recharts'
+import { AlertCircle, AlertTriangle, CheckCircle, BarChart3, Clock } from 'lucide-react'
 
 export default function Logs() {
   const [overview, setOverview] = useState(null)
@@ -15,7 +16,7 @@ export default function Logs() {
 
   if (loading) return <div className="loading-screen"><div className="spinner"/><div className="loading-text">Loading logs...</div></div>
 
-  const tt = { background:'#182240', border:'1px solid rgba(0,212,255,0.2)', borderRadius:8, color:'#e8f4fd' }
+  const tt = { background:'#f0f4ff', border:'1px solid rgba(37,99,235,0.2)', borderRadius:8, color:'#1f2937' }
 
   // Build simulated maintenance events from fleet data
   const engines = overview?.engines || []
@@ -27,7 +28,7 @@ export default function Logs() {
       severity: 'CRITICAL',
       engine: `EN${String(e.engine_id).padStart(3,'0')}`,
       rul: e.rul,
-      message: `IMMEDIATE MAINTENANCE — RUL = ${e.rul.toFixed(1)} cycles`,
+      message: `Immediate Maintenance - RUL = ${e.rul.toFixed(1)} cycles`,
       action: 'Shutdown recommended. Replace component urgently.',
       time: new Date().toLocaleString(),
     })),
@@ -35,7 +36,7 @@ export default function Logs() {
       severity: 'WARNING',
       engine: `EN${String(e.engine_id).padStart(3,'0')}`,
       rul: e.rul,
-      message: `Schedule maintenance — RUL = ${e.rul.toFixed(1)} cycles`,
+      message: `Schedule maintenance - RUL = ${e.rul.toFixed(1)} cycles`,
       action: 'Plan maintenance within 20 cycles.',
       time: new Date().toLocaleString(),
     })),
@@ -43,7 +44,7 @@ export default function Logs() {
       severity: 'INFO',
       engine: `EN${String(e.engine_id).padStart(3,'0')}`,
       rul: e.rul,
-      message: `Normal operation — RUL = ${e.rul.toFixed(1)} cycles`,
+      message: `Normal operation - RUL = ${e.rul.toFixed(1)} cycles`,
       action: 'Continue normal operation.',
       time: new Date().toLocaleString(),
     })),
@@ -51,9 +52,9 @@ export default function Logs() {
 
   const severityCounts = { CRITICAL: criticalEngines.length, WARNING: warningEngines.length, INFO: engines.length - criticalEngines.length - warningEngines.length }
   const pieData = [
-    { name:'Critical', value:severityCounts.CRITICAL, color:'#ff3366' },
-    { name:'Warning', value:severityCounts.WARNING, color:'#ff6b35' },
-    { name:'Healthy', value:severityCounts.INFO, color:'#00ff88' },
+    { name:'Critical', value:severityCounts.CRITICAL, color:'#dc2626' },
+    { name:'Warning', value:severityCounts.WARNING, color:'#ea580c' },
+    { name:'Healthy', value:severityCounts.INFO, color:'#16a34a' },
   ]
 
   // Top problematic engines
@@ -65,24 +66,24 @@ export default function Logs() {
 
   return (
     <>
-      <div className="page-header"><h1>📋 MAINTENANCE LOG</h1><p>Event History — Alert Tracking — Analytics</p></div>
+      <div className="page-header"><h1>MAINTENANCE LOG</h1><p>Event History - Alert Tracking - Analytics</p></div>
       <div className="page-body">
         {/* KPIs */}
         <div className="kpi-grid fade-in">
           <div className="kpi-card accent-red">
-            <div className="kpi-header"><span className="kpi-label">Critical Alerts</span><span className="kpi-icon red">🚨</span></div>
+            <div className="kpi-header"><span className="kpi-label">Critical Alerts</span><div className="kpi-icon red"><AlertCircle size={20} /></div></div>
             <div className="kpi-value">{severityCounts.CRITICAL}</div>
           </div>
           <div className="kpi-card accent-orange">
-            <div className="kpi-header"><span className="kpi-label">Warnings</span><span className="kpi-icon orange">⚠️</span></div>
+            <div className="kpi-header"><span className="kpi-label">Warnings</span><div className="kpi-icon orange"><AlertTriangle size={20} /></div></div>
             <div className="kpi-value">{severityCounts.WARNING}</div>
           </div>
           <div className="kpi-card accent-green">
-            <div className="kpi-header"><span className="kpi-label">Healthy</span><span className="kpi-icon green">✅</span></div>
+            <div className="kpi-header"><span className="kpi-label">Healthy</span><div className="kpi-icon green"><CheckCircle size={20} /></div></div>
             <div className="kpi-value">{severityCounts.INFO}</div>
           </div>
           <div className="kpi-card accent-cyan">
-            <div className="kpi-header"><span className="kpi-label">Total Engines</span><span className="kpi-icon cyan">📊</span></div>
+            <div className="kpi-header"><span className="kpi-label">Total Engines</span><div className="kpi-icon cyan"><BarChart3 size={20} /></div></div>
             <div className="kpi-value">{engines.length}</div>
           </div>
         </div>
@@ -91,30 +92,32 @@ export default function Logs() {
         <div style={{ marginBottom:20 }} className="fade-in stagger-1">
           <select className="form-select" value={filter} onChange={e => setFilter(e.target.value)}>
             <option value="ALL">All Severities</option>
-            <option value="CRITICAL">🚨 Critical Only</option>
-            <option value="WARNING">⚠️ Warning Only</option>
-            <option value="INFO">✅ Info Only</option>
+            <option value="CRITICAL">Critical Only</option>
+            <option value="WARNING">Warning Only</option>
+            <option value="INFO">Info Only</option>
           </select>
         </div>
 
         {/* Events */}
         <div className="section fade-in stagger-2">
-          <div className="section-title">📊 Event Log ({filtered.length} events)</div>
+          <div className="section-title">Event Log ({filtered.length} events)</div>
           {filtered.length === 0 ? (
             <div className="card" style={{ textAlign:'center', padding:40 }}>
-              <div style={{ fontSize:'2rem', marginBottom:12 }}>✅</div>
+              <div style={{ fontSize:'2rem', marginBottom:12, display:'flex', justifyContent:'center' }}><CheckCircle size={32} color="var(--green)" /></div>
               <div style={{ color:'var(--green)' }}>No events matching filter.</div>
             </div>
           ) : (
             filtered.map((evt, i) => (
               <div key={i} className={`alert-item ${evt.severity === 'CRITICAL' ? 'critical-alert' : evt.severity === 'WARNING' ? 'warning-alert' : 'info-alert'}`}>
-                <div style={{ fontSize:'1.4rem' }}>{evt.severity === 'CRITICAL' ? '🚨' : evt.severity === 'WARNING' ? '⚠️' : '✅'}</div>
+                <div style={{ fontSize:'1.4rem', display:'flex', flexShrink:0 }}>
+                  {evt.severity === 'CRITICAL' ? <AlertCircle size={24} color="var(--red)" /> : evt.severity === 'WARNING' ? <AlertTriangle size={24} color="var(--orange)" /> : <CheckCircle size={24} color="var(--green)" />}
+                </div>
                 <div className="alert-content">
                   <div className="alert-title" style={{ color: evt.severity === 'CRITICAL' ? 'var(--red)' : evt.severity === 'WARNING' ? 'var(--orange)' : 'var(--green)' }}>
-                    {evt.severity} — {evt.engine}
+                    {evt.severity} - {evt.engine}
                   </div>
                   <div className="alert-message">{evt.message}</div>
-                  <div className="alert-meta">⚙️ {evt.action} · {evt.time}</div>
+                  <div className="alert-meta"><Clock size={14} style={{display:'inline', marginRight:'4px'}} /> {evt.action} · {evt.time}</div>
                 </div>
               </div>
             ))
@@ -139,11 +142,11 @@ export default function Logs() {
             <div className="chart-title">Most Problematic Engines</div>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={topData} layout="vertical">
-                <XAxis type="number" tick={{ fill:'#7e8fa6', fontSize:11 }}/>
-                <YAxis type="category" dataKey="name" tick={{ fill:'#7e8fa6', fontSize:11 }} width={70}/>
+                <XAxis type="number" tick={{ fill:'#6b7280', fontSize:11 }}/>
+                <YAxis type="category" dataKey="name" tick={{ fill:'#6b7280', fontSize:11 }} width={70}/>
                 <Tooltip contentStyle={tt}/>
                 <Bar dataKey="rul" radius={[0,4,4,0]} barSize={14}>
-                  {topData.map((_,i)=><Cell key={i} fill={i<3?'#ff3366':'#ff6b35'}/>)}
+                  {topData.map((_,i)=><Cell key={i} fill={i<3?'#dc2626':'#ea580c'}/>)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>

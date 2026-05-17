@@ -1,6 +1,6 @@
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, Activity, FlaskConical, Crosshair, ClipboardList, Gauge
+  LayoutDashboard, Activity, FlaskConical, Crosshair, ClipboardList, Gauge, Zap
 } from 'lucide-react'
 import Dashboard from './pages/Dashboard'
 import KPIs from './pages/KPIs'
@@ -26,9 +26,10 @@ export default function App() {
       {/* ---- Sidebar ---- */}
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <h1>⚡ PREDMAINT AI</h1>
+          <div className="brand-icon"><Zap size={24} /></div>
+          <h1>PREDMAINT AI</h1>
           <div className="sub">NASA C-MAPSS Turbofan</div>
-          <div className="sub">ENSAM Meknès — 4ème Année IA</div>
+          <div className="sub">ENSAM Meknès - 4ème Année IA</div>
         </div>
 
         <nav className="sidebar-nav">
@@ -46,7 +47,7 @@ export default function App() {
         </nav>
 
         <div className="sidebar-footer">
-          v1.0 — Predictive Maintenance<br />© 2026 ENSAM Meknès
+          v1.0 - Predictive Maintenance<br />Prof. ZAKI Smail
         </div>
       </aside>
 

@@ -4,6 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
   LineChart, Line, AreaChart, Area, ReferenceLine
 } from 'recharts'
+import { Rocket, Clock } from 'lucide-react'
 import { api } from '../api'
 
 function GaugeRing({ value, label, color }) {
@@ -38,9 +39,9 @@ export default function Prognostic() {
   if (loading) return <div className="loading-screen"><div className="spinner"/><div className="loading-text">Analyzing engine...</div></div>
   if (!data) return <div className="page-body"><p style={{ color:'var(--red)' }}>Engine not found.</p></div>
 
-  const statusColor = data.status === 'healthy' ? '#00ff88' : data.status === 'warning' ? '#ff6b35' : '#ff3366'
+  const statusColor = data.status === 'healthy' ? '#16a34a' : data.status === 'warning' ? '#ea580c' : '#dc2626'
   const statusLabel = data.status.toUpperCase()
-  const tt = { background:'#182240', border:'1px solid rgba(0,212,255,0.2)', borderRadius:8, color:'#e8f4fd' }
+  const tt = { background:'#f0f4ff', border:'1px solid rgba(37,99,235,0.2)', borderRadius:8, color:'#1f2937' }
 
   const predData = Object.entries(data.predictions || {}).sort((a,b) => a[1] - b[1]).map(([n,v]) => ({ name:n, rul:v }))
   const rulHistory = (data.cycles || []).map((c,i) => ({ cycle:c, rul: data.rul_history?.[i] || 0 }))
@@ -50,7 +51,7 @@ export default function Prognostic() {
 
   return (
     <>
-      <div className="page-header"><h1>🔮 PROGNOSTIC CENTER</h1><p>Real-Time RUL Estimation & Forecasting</p></div>
+      <div className="page-header"><h1>PROGNOSTIC CENTER</h1><p>Real-Time RUL Estimation & Forecasting</p></div>
       <div className="page-body">
         <div style={{ marginBottom:20 }} className="fade-in">
           <select className="form-select" value={engineId} onChange={e=>setEngineId(+e.target.value)}>
@@ -61,12 +62,12 @@ export default function Prognostic() {
         {/* KPI Row */}
         <div className="kpi-grid fade-in stagger-1">
           <div className="kpi-card accent-cyan">
-            <div className="kpi-header"><span className="kpi-label">Engine</span><span className="kpi-icon cyan">🚀</span></div>
+            <div className="kpi-header"><span className="kpi-label">Engine</span><div className="kpi-icon cyan"><Rocket size={20} /></div></div>
             <div className="kpi-value">EN{String(data.engine_id).padStart(3,'0')}</div>
             <div className="kpi-delta neutral">Cycle {data.current_cycle}</div>
           </div>
           <div className="kpi-card accent-orange">
-            <div className="kpi-header"><span className="kpi-label">Predicted RUL</span><span className="kpi-icon orange">⏱️</span></div>
+            <div className="kpi-header"><span className="kpi-label">Predicted RUL</span><div className="kpi-icon orange"><Clock size={20} /></div></div>
             <div className="kpi-value">{data.rul.toFixed(1)}</div>
             <div className="kpi-delta neutral">cycles remaining</div>
           </div>
@@ -85,13 +86,13 @@ export default function Prognostic() {
             <div className="chart-title" style={{ alignSelf:'flex-start' }}>Health Index Gauge</div>
             <GaugeRing value={data.health_index} label="Health" color={statusColor}/>
             <div style={{ marginTop:16, display:'flex', gap:8 }}>
-              <div className="badge badge-healthy" style={{ fontSize:'0.65rem' }}>🟢 60-100%</div>
-              <div className="badge badge-warning" style={{ fontSize:'0.65rem' }}>🟡 30-60%</div>
-              <div className="badge badge-critical" style={{ fontSize:'0.65rem' }}>🔴 0-30%</div>
+              <div className="badge badge-healthy" style={{ fontSize:'0.65rem' }}>Healthy 60-100%</div>
+              <div className="badge badge-warning" style={{ fontSize:'0.65rem' }}>Warning 30-60%</div>
+              <div className="badge badge-critical" style={{ fontSize:'0.65rem' }}>Critical 0-30%</div>
             </div>
           </div>
           <div className={`prescription ${prescClass}`}>
-            <h3 style={{ color:statusColor }}>🔧 {p.status || 'N/A'}</h3>
+            <h3 style={{ color:statusColor }}>{p.status || 'N/A'}</h3>
             <ul>
               <li><strong>Action:</strong> {p.action}</li>
               <li><strong>Risk Level:</strong> {p.risk}</li>
@@ -109,15 +110,15 @@ export default function Prognostic() {
                 <AreaChart data={rulHistory}>
                   <defs>
                     <linearGradient id="rulGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00d4ff" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#00d4ff" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="cycle" tick={{ fill:'#7e8fa6', fontSize:11 }}/>
-                  <YAxis tick={{ fill:'#7e8fa6', fontSize:11 }}/>
+                  <XAxis dataKey="cycle" tick={{ fill:'#6b7280', fontSize:11 }}/>
+                  <YAxis tick={{ fill:'#6b7280', fontSize:11 }}/>
                   <Tooltip contentStyle={tt}/>
-                  <ReferenceLine y={30} stroke="#ff3366" strokeDasharray="4 4" label={{ value:'Critical', fill:'#ff3366', fontSize:11 }}/>
-                  <Area type="monotone" dataKey="rul" stroke="#00d4ff" fill="url(#rulGrad)" strokeWidth={2}/>
+                  <ReferenceLine y={30} stroke="#dc2626" strokeDasharray="4 4" label={{ value:'Critical', fill:'#dc2626', fontSize:11 }}/>
+                  <Area type="monotone" dataKey="rul" stroke="#2563eb" fill="url(#rulGrad)" strokeWidth={2}/>
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -131,11 +132,11 @@ export default function Prognostic() {
               <div className="chart-title">Multi-Model RUL Comparison</div>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={predData} layout="vertical">
-                  <XAxis type="number" tick={{ fill:'#7e8fa6', fontSize:11 }}/>
-                  <YAxis type="category" dataKey="name" tick={{ fill:'#7e8fa6', fontSize:11 }} width={110}/>
+                  <XAxis type="number" tick={{ fill:'#6b7280', fontSize:11 }}/>
+                  <YAxis type="category" dataKey="name" tick={{ fill:'#6b7280', fontSize:11 }} width={110}/>
                   <Tooltip contentStyle={tt}/>
                   <Bar dataKey="rul" radius={[0,6,6,0]} barSize={20}>
-                    {predData.map((_,i)=><Cell key={i} fill={`hsl(${200-i*30},80%,55%)`}/>)}
+                    {predData.map((_,i)=><Cell key={i} fill={`hsl(${220-i*30},80%,50%)`}/>)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>

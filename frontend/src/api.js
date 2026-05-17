@@ -1,5 +1,5 @@
 /**
- * API service module — centralised fetch wrapper for the Flask backend.
+ * API service module - centralised fetch wrapper for the Flask backend.
  */
 
 const API_BASE = '/api';
