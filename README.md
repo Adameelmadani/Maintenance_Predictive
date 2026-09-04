@@ -2,6 +2,8 @@
 
 A full-stack machine learning application for predicting remaining useful life (RUL) of turbofan engines and monitoring fleet health in real-time.
 
+<img src="demo/demo.gif">
+
 ## Overview
 
 This project implements a predictive maintenance platform using advanced machine learning models and signal processing techniques. It features a Flask REST API backend and a React-based interactive dashboard for visualizing engine health, predictions, and sensor data analysis.
