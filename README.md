@@ -230,9 +230,9 @@ Edit `frontend/package.json` for dependency versions
 - Custom alert thresholds per engine
 - Maintenance history integration
 
-## License
+## Licence
 
-This project is developed as part of the ENSAM (École Nationale Supérieure des Arts et Métiers) curriculum.
+Ce projet est sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## References
 
